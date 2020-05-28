@@ -1,3 +1,7 @@
+CREATE DATABASE TMDT;
+GO
+USE TMDT;
+GO
 Create table Customer
 (
 	ID int Identity(1,1) primary key,
@@ -10,7 +14,7 @@ Create table Customer
 	Address nvarchar(max),
 
 );
-
+GO
 Create table Account
 (
 	ID int Identity(1,1) primary key,
@@ -22,14 +26,14 @@ Create table Account
 	
 	Foreign key (IDCustomer) references Customer(ID),
 );
-
+GO
 Create table BakeryType
 (
 	ID int Identity(1,1) primary key,
 	Name nvarchar(max),
 	Status bit,
 );
-
+GO
 Create table Bakery
 (
 	ID int Identity(1,1) primary key,
@@ -42,8 +46,8 @@ Create table Bakery
 
 	Foreign key (IDType) references BakeryType(ID),
 );
-
-Create table Order
+GO
+Create table Orders
 (
 	ID int Identity(1,1) primary key,
 	IDCustomer int,
@@ -53,7 +57,7 @@ Create table Order
 
 	Foreign key (IDCustomer) references Customer(ID),
 );
-
+GO
 Create table OrderDetail
 (
 	IDOrder int,
@@ -63,11 +67,7 @@ Create table OrderDetail
 	Status int,
 
 	Constraint orderdetail_pk Primary key (IDOrder,IDBakery),
-	Foreign key (IDOrder) references Order(ID),
+	Foreign key (IDOrder) references Orders(ID),
 	Foreign key (IDBakery) references Bakery(ID),
 );
 
-Create table Delivery
-(
-
-);

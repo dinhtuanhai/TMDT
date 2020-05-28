@@ -57,7 +57,8 @@ namespace IdentityServer
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "product"
-                    }
+                    },
+                    AllowOfflineAccess = true
                 }
             };
      }
