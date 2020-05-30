@@ -39,5 +39,10 @@ namespace MVCClient.Controllers
         {
             return SignOut("Cookies", "oidc");
         }
+        [Authorize]
+        public IActionResult Login()
+        {
+            return View("Index");
+        }
     }
 }

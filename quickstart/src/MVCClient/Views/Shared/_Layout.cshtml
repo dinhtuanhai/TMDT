@@ -31,7 +31,8 @@
                         <li><a asp-controller="Menu" asp-action="Index">Menu</a></li>
                         <li><a asp-controller="AboutUs" asp-action="Index">About</a></li>
                         <li><a asp-controller="Contact" asp-action="Index">Contact</a></li>
-                        <li class="menu-has-children">
+                        <li class="menu-has-children"><partial name="_LoginPartial" /></li>
+                        @*<li class="menu-has-children">
                             <a href="">Blog</a>
                             <ul>
                                 <li><a href="blog-home.html">Blog Home</a></li>
@@ -44,7 +45,7 @@
                                     </ul>
                                 </li>
                             </ul>
-                        </li>
+                        </li>*@
                     </ul>
                 </nav><!-- #nav-menu-container -->
             </div>

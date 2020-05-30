@@ -2,7 +2,7 @@
 {
     public class AppSettings
     {
-        public string MovieUrl { get; set; }
+        public string ApiUrl { get; set; }
         public string IdentityUrl { get; set; }
         public string ExternalCatalogBaseUrl { get; set; }
         public ClientCredentials ClientCredentials { get; set; }

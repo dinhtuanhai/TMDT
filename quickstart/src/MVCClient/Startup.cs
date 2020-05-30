@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MVCClient.Infrastructure;
+using MVCClient.Services;
 
 namespace MVCClient
 {
@@ -29,6 +30,7 @@ namespace MVCClient
             services.Configure<AppSettings>(Configuration);
             services.AddHttpContextAccessor();
             services.AddHttpClient<IHttpClient, CustomHttpClient>();
+            services.AddScoped<IBakeryService, BakeryService>();
 
             services.AddControllersWithViews();
 
