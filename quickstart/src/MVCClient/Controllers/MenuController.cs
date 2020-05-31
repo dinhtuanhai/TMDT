@@ -5,22 +5,26 @@ using System.Threading.Tasks;
 using Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVCClient.Authorization;
 using MVCClient.Models;
 using MVCClient.Services;
 
 namespace MVCClient.Controllers
 {
+    [AllowAnonymous]
     public class MenuController : Controller
     {
         private readonly IBakeryService _service;
         private readonly IAuthorizationService _authorizationService;
-        public MenuController(IBakeryService service)
+        public MenuController(IBakeryService service, IAuthorizationService authorizationService)
         {
             _service = service;
+            _authorizationService = authorizationService;
         }
-        public async Task<IActionResult> Index()
+        
+        public async Task<IActionResult> Index(string bakeryType, string searchString)
         {
-            var menu = await _service.GetCatalog();
+            var menu = await _service.GetCatalog(bakeryType, searchString);
             var indexViewModel = new IndexViewModel()
             {
                 AllBakeryTypes = menu.AllBakeryTypes,
@@ -34,36 +38,6 @@ namespace MVCClient.Controllers
             Bakery bakery = await _service.GetBakery(id);
             return View(bakery);
         }
-        public async Task<JsonResult> ShowListBakery(string tabtype)
-        {
-            try
-            {
-                var listbakery = await _service.GetListBakery(tabtype);
-                List<Bakery> listdata = new List<Bakery>();
-                foreach(Bakery item in listbakery)
-                {
-                    Bakery bakery = new Bakery();
-                    bakery.Id = item.Id;
-                    bakery.Name = item.Name;
-                    bakery.Price = item.Price;
-                    bakery.Describe = item.Describe;
-                    bakery.Idtype = item.Idtype;
-                    listdata.Add(bakery);
-                }
-                return Json(new
-                {
-                    status = true,
-                    data = listdata
-                });
-            }
-            catch
-            {
-                return Json(new
-                {
-                    status = false
-                });
-            }
 
-        }
     }
 }

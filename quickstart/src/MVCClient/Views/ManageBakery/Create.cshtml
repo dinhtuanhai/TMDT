@@ -1,0 +1,60 @@
+﻿@model Bakery
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="banner-area relative about-banner" id="home">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="about-content col-lg-12">
+                <h1 class="text-white">
+                    Create Bakery
+                </h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="whole-wrap">
+    <div class="container">
+        <div class="section-top-border">
+            <form method="POST">
+                <div class="mt-10">
+                    <label>Bakery name</label>
+                    <input asp-for="Name" placeholder="Bakery name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Bakery name'" required class="single-input">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
+                    <label>Price</label>
+                    <input asp-for="Price" placeholder="Price" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Price'" required class="single-input">
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
+                    <label>Bakery Type</label>
+                    <div class="form-select">
+                        <select class="list" asp-for="Idtype" asp-items="@(new SelectList(ViewBag.listType,"Id","Name"))">
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <label>Rating</label>
+                    <input asp-for="Rating" placeholder="Rating" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Rating'" required class="single-input" />
+                    <span asp-validation-for="Rating" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
+                    <label>Describe</label>
+                    <textarea asp-for="Describe" class="single-textarea" placeholder="Describe" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Describe'" required=""></textarea>
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
+                    <div class="row">
+                        <button type="submit" class="genric-btn info mr-10">Save</button>
+                        <a asp-controller="ManageBakery" asp-action="Index" class="genric-btn warning">Back</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

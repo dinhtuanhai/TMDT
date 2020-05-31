@@ -1,0 +1,10 @@
+﻿@if (User.IsInRole("Managers") || User.IsInRole("Administrators"))
+{
+    <a href="#">Manage</a>
+    <ul>
+        <li>
+            <a asp-action="Index" asp-controller="ManageBakery">Bakeries</a>
+        </li>
+    </ul>
+}
+

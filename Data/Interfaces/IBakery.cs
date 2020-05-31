@@ -8,6 +8,7 @@ namespace Data.Interfaces
 {
     public interface IBakery : IRepository<Bakery>
     {
-        Task<List<string>> GetAllBakeryTypes();
+        Task<IEnumerable<BakeryType>> GetAllBakeryTypes();
+        Task<IEnumerable<Bakery>> GetBakeries(string bakeryType = null, string searchString = null);
     }
 }

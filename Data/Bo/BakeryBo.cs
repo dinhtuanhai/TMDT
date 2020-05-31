@@ -16,9 +16,28 @@ namespace Data.Bo
         {
             _context = context;
         }
-        public async Task<List<string>> GetAllBakeryTypes()
+        public async Task<IEnumerable<BakeryType>> GetAllBakeryTypes()
         {
-            return await _context.BakeryType.Select(x => x.Name).ToListAsync();
+            return await _context.BakeryType.ToListAsync();
         }
+
+        public async Task<IEnumerable<Bakery>> GetBakeries(string bakeryType = null, string searchString = null)
+        {
+            var bakeries = from m in _context.Bakery
+                           where m.Status == 1
+                         select m;
+
+            if (!string.IsNullOrEmpty(bakeryType))
+            {
+                bakeries = bakeries.Where(m => m.IdtypeNavigation.Name.Contains(bakeryType));
+            }
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                bakeries = bakeries.Where(m => m.Name.Contains(searchString));
+            }
+
+            return await bakeries.OrderBy(x => x.Idtype).ToListAsync();
+        }
+
     }
 }

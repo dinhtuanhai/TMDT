@@ -7,6 +7,7 @@ using Data.Interfaces;
 using Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Controllers
 {
@@ -25,15 +26,25 @@ namespace Api.Controllers
         }
 
         [HttpGet("catalog")]
-        public async Task<IndexDTO> GetCatalog()
+        public async Task<IndexDTO> GetCatalog(string bakeryType = "", string searchString = "")
         {
             var indexDTO = new IndexDTO()
             {
+                TypeSearch = bakeryType,
+                SearchString = searchString,
                 AllBakeryTypes = await _repository.GetAllBakeryTypes(),
-                Bakeries = await _repository.GetAll()
+                Bakeries = await _repository.GetBakeries(bakeryType, searchString)
             };
 
             return indexDTO;
+        }
+
+        [HttpGet("types")]
+        public async Task<IEnumerable<BakeryType>> GetTypes()
+        {
+            var allBakeryTypes = await _repository.GetAllBakeryTypes();
+
+            return allBakeryTypes;
         }
 
         [HttpGet("listbakery")]
@@ -54,6 +65,43 @@ namespace Api.Controllers
             }
 
             return bakery;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Bakery>> Create(Bakery bakery)
+        {
+            await _repository.Add(bakery);
+
+            return CreatedAtAction(nameof(GetBakery), new { id = bakery.Id }, bakery);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, Bakery bakery)
+        {
+            if (id != bakery.Id)
+            {
+                return BadRequest();
+            }
+
+            var bakerymodify = await _repository.GetBy(id);
+
+            if (bakerymodify == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                //await _repository.Update(bakery);
+                _context.Entry(await _context.Bakery.FirstOrDefaultAsync(x => x.Id == id)).CurrentValues.SetValues(bakery);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

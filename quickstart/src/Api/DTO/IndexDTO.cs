@@ -10,7 +10,7 @@ namespace Api.DTO
     {
         public string SearchString { get; set; }
         public string TypeSearch { get; set; }
-        public IEnumerable<string> AllBakeryTypes { get; set; }
+        public IEnumerable<BakeryType> AllBakeryTypes { get; set; }
         public IEnumerable<Bakery> Bakeries { get; set; }
     }
 }

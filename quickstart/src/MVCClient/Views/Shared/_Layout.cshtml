@@ -27,25 +27,26 @@
                 <a asp-controller="Home" asp-action="Index"><img src="~/img/logo.png" alt="" title="" /></a>
                 <nav id="nav-menu-container">
                     <ul class="nav-menu">
+                        <li class="menu-has-children"><partial name="_Admin" /></li>
                         <li class="menu-active"><a asp-controller="Home" asp-action="Index">Home</a></li>
                         <li><a asp-controller="Menu" asp-action="Index">Menu</a></li>
                         <li><a asp-controller="AboutUs" asp-action="Index">About</a></li>
                         <li><a asp-controller="Contact" asp-action="Index">Contact</a></li>
                         <li class="menu-has-children"><partial name="_LoginPartial" /></li>
                         @*<li class="menu-has-children">
-                            <a href="">Blog</a>
-                            <ul>
-                                <li><a href="blog-home.html">Blog Home</a></li>
-                                <li><a href="blog-single.html">Blog Single</a></li>
-                                <li class="menu-has-children">
-                                    <a href="">Level 2</a>
-                                    <ul>
-                                        <li><a href="#">Item One</a></li>
-                                        <li><a href="#">Item Two</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>*@
+            <a href="">Blog</a>
+            <ul>
+                <li><a href="blog-home.html">Blog Home</a></li>
+                <li><a href="blog-single.html">Blog Single</a></li>
+                <li class="menu-has-children">
+                    <a href="">Level 2</a>
+                    <ul>
+                        <li><a href="#">Item One</a></li>
+                        <li><a href="#">Item Two</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>*@
                     </ul>
                 </nav><!-- #nav-menu-container -->
             </div>

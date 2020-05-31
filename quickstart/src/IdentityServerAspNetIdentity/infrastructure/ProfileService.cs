@@ -22,11 +22,16 @@ namespace IdentityServerAspNetIdentity.infrastructure
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
             var user = await _userManager.GetUserAsync(context.Subject);
+            var roles = await _userManager.GetRolesAsync(user);
 
             var claims = new List<Claim>
             {
                 new Claim("name", user.UserName),
             };
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim("role", role));
+            }
 
             context.IssuedClaims.AddRange(claims);
         }

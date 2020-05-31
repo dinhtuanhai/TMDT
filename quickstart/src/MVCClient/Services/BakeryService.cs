@@ -26,9 +26,15 @@ namespace MVCClient.Services
             return await _httpClient.GetAsync<Bakery>(uri);
         }
 
-        public async Task<IndexViewModel> GetCatalog()
+        public async Task<IEnumerable<BakeryType>> GetTypes()
         {
-            var uri = _baseUrl + $"/catalog";
+            var uri = _baseUrl + $"/types";
+            return await _httpClient.GetListAsync<BakeryType>(uri);
+        }
+
+        public async Task<IndexViewModel> GetCatalog(string bakeryType, string searchString)
+        {
+            var uri = _baseUrl + $"/catalog?searchString={searchString}&bakeryType={bakeryType}";
 
             return await _httpClient.GetAsync<IndexViewModel>(uri);
         }
@@ -37,6 +43,26 @@ namespace MVCClient.Services
         {
             var uri = _baseUrl + $"/listbakery";
             return await _httpClient.GetListAsync<Bakery>(uri);
+        }
+
+        public async Task CreateBakery(Bakery bakery)
+        {
+            var uri = _baseUrl;
+
+            await _httpClient.PostAsync(uri, bakery);
+        }
+        public async Task UpdateBakery(int id, Bakery bakery)
+        {
+            var uri = _baseUrl + $"/{id}";
+
+            await _httpClient.PutAsync(uri, bakery);
+        }
+
+        public async Task DeleteBakery(int id)
+        {
+            var uri = _baseUrl + $"/{id}";
+
+            await _httpClient.DeleteAsync(uri);
         }
     }
 }
