@@ -8,6 +8,7 @@ namespace Data.Models
         public Bakery()
         {
             OrderDetail = new HashSet<OrderDetail>();
+            ShoppingCartItem = new HashSet<ShoppingCartItem>();
         }
 
         public int Id { get; set; }
@@ -20,5 +21,6 @@ namespace Data.Models
 
         public virtual BakeryType IdtypeNavigation { get; set; }
         public virtual ICollection<OrderDetail> OrderDetail { get; set; }
+        public virtual ICollection<ShoppingCartItem> ShoppingCartItem { get; set; }
     }
 }

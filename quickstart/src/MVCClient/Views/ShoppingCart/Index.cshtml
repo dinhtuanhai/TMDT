@@ -1,0 +1,57 @@
+﻿@model ShoppingCartViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="banner-area relative about-banner" id="home">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="about-content col-lg-12">
+                <h1 class="text-white">
+                    Cart
+                </h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="whole-wrap">
+    <div class="container">
+        <div class="section-top-border">
+            <div class="row">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Bakery</th>
+                            <th>Amount</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model.ShoppingCart.ShoppingCartItem)
+                        {
+                        <tr>
+                            <td>@item.IdbakeryNavigation.Name</td>
+                            <td>@item.Amount</td>
+                            <td>@item.IdbakeryNavigation.Price</td>
+                            <td>@((item.Amount * item.IdbakeryNavigation.Price).ToString())</td>
+                            <td class="text-center"><a class="genric-btn danger" asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart" asp-route-id="@item.IdbakeryNavigation.Id"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3">Total</td>
+                            <td>@Model.ShoppingCartTotal.ToString()</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

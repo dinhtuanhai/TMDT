@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,7 +34,9 @@ namespace MVCClient
             services.Configure<AppSettings>(Configuration);
             services.AddHttpContextAccessor();
             services.AddHttpClient<IHttpClient, CustomHttpClient>();
+            services.AddDbContext<TMDTContext>(options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("TMDT")));
             services.AddScoped<IBakeryService, BakeryService>();
+            services.AddScoped(sp => ShoppingCart.GetCart(sp));
 
             services.AddControllersWithViews();
 
@@ -66,6 +70,9 @@ namespace MVCClient
                 });
             services.AddScoped<IAuthorizationHandler, ManagersAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, AdministratorsAuthorizationHandler>();
+
+            services.AddMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,7 +88,7 @@ namespace MVCClient
             }
 
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

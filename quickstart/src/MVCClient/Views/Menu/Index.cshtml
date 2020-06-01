@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var selectList = new SelectList(Model.AllBakeryTypes, "Name", "Name");
 }
 
 <!-- start banner Area -->
@@ -41,18 +42,28 @@
                     }
                 </ul>
             </div>
-
+        </div>
+        <div class="row mb-10">
+            <div class="col text-right">
+                <form asp-action="Index" method="GET" style="float:right">
+                    <select hidden class="w-auto" asp-for="TypeSearch" asp-items="@selectList">
+                        <option value="">All</option>
+                    </select>
+                    <input placeholder="Find bakery name..." asp-for="SearchString" type="text" />
+                    <button class="genric-btn primary small" type="submit"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
         </div>
         <div id="pills-tabContent" class="tab-content absolute">
             <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
                 @foreach (var item in Model.Bakeries)
                 {
                     <div class="single-menu-list row justify-content-between align-items-center">
-                        <div class="col-lg-2">
+                        <div class="col-lg-2" align="center">
                             <img class="img-fluid" src="~/img/c1.jpg" alt="">
                         </div>
                         <div class="col-lg-4">
-                            <a href="#"><h4>@item.Name</h4></a>
+                            <a href="#" align="center"><h4>@item.Name</h4></a>
                             <p class="text-truncate" style="max-width: 700px">
                                 @item.Describe
                             </p>
@@ -63,8 +74,8 @@
                             </div>
                         </div>
                         <div class="col-lg-4" align="center">
-                            <a href="#" class="genric-btn primary">Add</a>
-                            <a asp-controller="Menu" asp-action="Detail" asp-route-id="@item.Id" class="genric-btn primary">Detail</a>
+                            <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-id="@item.Id" asp-route-amount="1" class="genric-btn info">Add</a>
+                            <a asp-controller="Menu" asp-action="Detail" asp-route-id="@item.Id" class="genric-btn warning">Detail</a>
                             @if ((await AuthorizationService.AuthorizeAsync(User, item, ProductOperations.Update)).Succeeded)
                             {
                                 <a asp-controller="Menu" asp-action="Edit" asp-route-id="@item.Id" class="genric-btn info">Edit</a>
@@ -97,7 +108,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-4" align="center">
-                                    <a href="#" class="genric-btn primary">Add</a>
+                                    <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-id="@item.Id" asp-route-amount="1" class="genric-btn primary">Add</a>
                                     <a asp-controller="Menu" asp-action="Detail" asp-route-id="@item.Id" class="genric-btn primary">Detail</a>
                                     @if ((await AuthorizationService.AuthorizeAsync(User, item, ProductOperations.Update)).Succeeded)
                                     {

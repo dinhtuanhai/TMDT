@@ -26,6 +26,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("catalog")]
+        [AllowAnonymous]
         public async Task<IndexDTO> GetCatalog(string bakeryType = "", string searchString = "")
         {
             var indexDTO = new IndexDTO()
@@ -55,6 +56,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Bakery>> GetBakery(int id)
         {
             var bakery = await _repository.GetBy(id);

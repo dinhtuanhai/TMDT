@@ -21,6 +21,9 @@ namespace Data.Models
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<OrderDetail> OrderDetail { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
+        
+        public virtual DbSet<ShoppingCartItem> ShoppingCartItem { get; set; }
+        public virtual DbSet<ShoppingCart> ShoppingCart { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -77,6 +80,32 @@ namespace Data.Models
                 entity.Property(e => e.LastName).HasMaxLength(50);
 
                 entity.Property(e => e.Phone).HasMaxLength(11);
+            });
+
+            modelBuilder.Entity<ShoppingCartItem>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.IdShoppingCart).HasColumnName("IDShoppingCart");
+
+                entity.Property(e => e.Idbakery).HasColumnName("IDBakery");
+
+                entity.HasOne(d => d.IdbakeryNavigation)
+                    .WithMany(p => p.ShoppingCartItem)
+                    .HasForeignKey(d => d.Idbakery)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ShoppingCartItem__IDBak");
+
+                entity.HasOne(d => d.IdShoppingCartNavigation)
+                    .WithMany(p => p.ShoppingCartItem)
+                    .HasForeignKey(d => d.IdShoppingCart)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ShoppingCartItem__IDShoppingCart");
+            });
+
+            modelBuilder.Entity<ShoppingCart>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
