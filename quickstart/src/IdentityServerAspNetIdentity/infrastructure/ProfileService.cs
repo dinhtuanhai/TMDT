@@ -24,10 +24,20 @@ namespace IdentityServerAspNetIdentity.infrastructure
             var user = await _userManager.GetUserAsync(context.Subject);
             var roles = await _userManager.GetRolesAsync(user);
 
-            var claims = new List<Claim>
+            IList<Claim> userclaims = await _userManager.GetClaimsAsync(user);
+
+            var claims = new List<Claim>();
+            foreach (var claim in userclaims)
             {
-                new Claim("name", user.UserName),
-            };
+                string type = claim.Type;
+                string value = claim.Value;
+                claims.Add(new Claim(type, value));
+            }
+
+            //var claims = new List<Claim>
+            //{
+            //    new Claim("name", user.UserName),
+            //};
             foreach (var role in roles)
             {
                 claims.Add(new Claim("role", role));

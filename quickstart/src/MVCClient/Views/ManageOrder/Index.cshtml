@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Orders>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="banner-area relative about-banner" id="home">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="about-content col-lg-12">
+                <h1 class="text-white">
+                    Manage
+                </h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="whole-wrap">
+    <div class="container">
+        <div class="section-top-border">
+            <h3 class="mb-30">Orders</h3>
+            <div class="row mb-10">
+                @*<form asp-action="Index" method="GET" style="float:right">
+                        <div class="row">
+                            <select class="w-auto" asp-for="TypeSearch" asp-items="@selectList">
+                                <option value="">All</option>
+                            </select>
+                            <input placeholder="Find bakery name..." asp-for="SearchString" type="text" />
+                            <button class="genric-btn primary small" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                    </form>*@
+            </div>
+            <div class="row">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>OrderId</th>
+                            <th>Customer name</th>
+                            <th>Date</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Total</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td class="text-truncate" style="max-width: 250px">@(item.FirstName + " " + item.LastName)</td>
+                                <td>@((item.CreateDate.HasValue) ? item.CreateDate.Value.ToString("dd/MM/yyyy") : null)</td>
+                                <td>@item.Phone</td>
+                                <td>@item.Email</td>
+                                <td>@item.OrderTotal</td>
+                                <td>
+                                    <a class="genric-btn info small" asp-controller="ManageOrder" asp-action="Detail" asp-route-id="@item.Id">Detail</a>
+                                    <a class="genric-btn warning small" asp-controller="ManageBakery" asp-action="Edit" asp-route-id="@item.Id">Status</a>
+                                    <button id="@item.Id" data-toggle="modal" data-target="#modal-default" class="genric-btn danger small delete">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete bakery</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Do you really want to Delete ?</p>
+            </div>
+            <div id="buttonsFooter" class="modal-footer justify-content-between">
+                <button type="button" class="genric-btn info" data-dismiss="modal">Close</button>
+                <button type="button" class="genric-btn danger">Delete anyway</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/vendor/jquery-2.2.4.min.js"></script>
+<script>
+    $(document).ready(function ()
+    {
+        var SetButtons = $("#buttonsFooter");
+        SetButtons.html("");
+        $(document).on("click", ".delete", function ()
+        {
+            var id = $(this).attr("id");
+            var Data = '<button type="button" class="genric-btn info" data-dismiss="modal">Close</button>' +
+                '<a href="/ManageBakery/Delete/' + id + '" type="button" class="genric-btn danger">Delete anyway</a>';
+            SetButtons.append(Data);
+        })
+    });
+</script>

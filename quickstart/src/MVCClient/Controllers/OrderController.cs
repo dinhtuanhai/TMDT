@@ -5,7 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Data.Interfaces;
 using Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MVCClient.Infrastructure;
 
 namespace MVCClient.Controllers
 {
@@ -22,9 +24,12 @@ namespace MVCClient.Controllers
 
         public IActionResult Checkout()
         {
-            if(User.Identity.IsAuthenticated)
+
+            if (User.Identity.IsAuthenticated)
             {
-                return View();
+                Orders orders = CreateOrderForCurrentUser();
+
+                return RedirectToAction("Index","Stripe",orders);
             }
             else
             {
@@ -50,8 +55,7 @@ namespace MVCClient.Controllers
                 var total = _shoppingCart.GetShoppingCartTotal();
                 orders.OrderTotal = total;
                 orders.CreateDate = DateTime.Now;
-                _orderRepository.CreateOrder(orders);
-                _shoppingCart.ClearCard();
+
                 return RedirectToAction("Index","Stripe", orders);
             }
             else
@@ -65,5 +69,17 @@ namespace MVCClient.Controllers
             return View();
         }
 
+        private Orders CreateOrderForCurrentUser()
+        {
+            Orders orders = new Orders();
+            orders.CreateDate = DateTime.Now;
+            orders.FirstName = User.FindFirstValue("given_name");
+            orders.LastName = User.FindFirstValue("family_name");
+            orders.Email = User.FindFirstValue("email");
+            orders.Address = User.FindFirstValue("address");
+            orders.OrderTotal = _shoppingCart.GetShoppingCartTotal();
+
+            return orders;
+        }
     }
 }

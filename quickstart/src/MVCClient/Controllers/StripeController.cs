@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Interfaces;
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
@@ -10,13 +11,22 @@ namespace MVCClient.Controllers
 {
     public class StripeController : Controller
     {
+        private readonly IOrder _orderRepository;
+        private readonly ShoppingCart _shoppingCart;
+        public StripeController(IOrder orderRepositoty, ShoppingCart shoppingCart)
+        {
+            _orderRepository = orderRepositoty;
+            _shoppingCart = shoppingCart;
+        }
         public IActionResult Index(Orders order)
         {
             return View(order);
         }
 
-        public IActionResult Charge(string stripeEmail, string stripeToken, int id, long total)
+        public IActionResult PayWithCard(string stripeEmail, string stripeToken, Orders orders)
         {
+            _orderRepository.CreateOrder(orders);
+            _shoppingCart.ClearCard();
             var customers = new CustomerService();
             var charges = new ChargeService();
 
@@ -26,8 +36,8 @@ namespace MVCClient.Controllers
             });
 
             var charge = charges.Create(new ChargeCreateOptions { 
-                Amount = total,
-                Description = "OrderId: " + id,
+                Amount = (long)orders.OrderTotal,
+                Description = "OrderId: " + orders.Id,
                 Currency = "vnd",
                 Customer = customer.Id,
                 ReceiptEmail = stripeEmail
@@ -38,8 +48,12 @@ namespace MVCClient.Controllers
                 string BalanceTransactionId = charge.BalanceTransactionId;
                 ViewBag.Message = "Thanks for your order";
             }
+            return View();
+        }
 
-
+        public IActionResult COD()
+        {
+            ViewBag.Message = "Thanks for your order";
             return View();
         }
     }

@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Data.Bo
 {
-    public class OrderBo : IOrder
+    public class OrderBo : Repository<Orders>, IOrder
     {
         private readonly TMDTContext _context;
         private readonly ShoppingCart _shoppingCart;
-        public OrderBo(TMDTContext context, ShoppingCart shoppingCart)
+        public OrderBo(TMDTContext context, ShoppingCart shoppingCart) : base(context)
         {
             _context = context;
             _shoppingCart = shoppingCart;
