@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Bo;
+using Data.Interfaces;
 using Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -14,8 +17,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MVCClient.Authorization.Handlers;
+using MVCClient.Data;
 using MVCClient.Infrastructure;
 using MVCClient.Services;
+using Stripe;
 
 namespace MVCClient
 {
@@ -32,10 +37,12 @@ namespace MVCClient
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppSettings>(Configuration);
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
             services.AddHttpContextAccessor();
-            services.AddHttpClient<IHttpClient, CustomHttpClient>();
+            services.AddHttpClient<Infrastructure.IHttpClient, CustomHttpClient>();
             services.AddDbContext<TMDTContext>(options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("TMDT")));
             services.AddScoped<IBakeryService, BakeryService>();
+            services.AddScoped<IOrder, OrderBo>();
             services.AddScoped(sp => ShoppingCart.GetCart(sp));
 
             services.AddControllersWithViews();
@@ -73,11 +80,16 @@ namespace MVCClient
 
             services.AddMemoryCache();
             services.AddSession();
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

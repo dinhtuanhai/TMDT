@@ -1,0 +1,68 @@
+﻿@model Orders
+@{
+    ViewData["Title"] = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="banner-area relative about-banner" id="home">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="about-content col-lg-12">
+                <h1 class="text-white">
+                    Checkout
+                </h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="whole-wrap">
+    <div class="container">
+        <div class="section-top-border">
+            <h3>Fill in your information</h3>
+            <form method="POST">
+                <div class="mt-10">
+                    <label>First name</label>
+                    <input asp-for="FirstName" placeholder="Enter your first name..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your first name...'" required class="single-input">
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
+                    <label>Last name</label>
+                    <input asp-for="LastName" placeholder="Enter your last name..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your last name...'" required class="single-input">
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
+                    <label>Phone number</label>
+                    <input type="number" asp-for="Phone" placeholder="Enter your phone number..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your phone number...'" required class="single-input">
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
+                    <label>Email</label>
+                    <input asp-for="Email" placeholder="Enter your email..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your email...'" required class="single-input" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
+                    <label>Address</label>
+                    <textarea asp-for="Address" class="single-textarea" placeholder="Enter your address..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your address...'" required=""></textarea>
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
+                    <label>Note</label>
+                    <textarea asp-for="Note" class="single-textarea" placeholder="Write note..." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Write note...'" required=""></textarea>
+                    <span asp-validation-for="Note" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
+                    <div class="row">
+                        <div class="col text-left">
+                            <button type="submit" class="genric-btn info mr-10">CHECKOUT</button>
+                        </div>
+                        <div class="col text-right">
+                            <a asp-controller="ShoppingCart" asp-action="Index" class="genric-btn warning">BACK</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

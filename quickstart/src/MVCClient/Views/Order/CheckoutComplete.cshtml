@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewData["Title"] = "CheckoutComplete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <section class="banner-area relative about-banner" id="home">
+        <div class="overlay overlay-bg"></div>
+        <div class="container">
+            <div class="row d-flex align-items-center justify-content-center">
+                <div class="about-content col-lg-12">
+                    <h1 class="text-white">
+                        Checkout
+                    </h1>
+                    <p class="text-white link-nav"><a asp-controller="Home" asp-action="Index">Home page</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+<<div class="whole-wrap">
+    <div class="container">
+        <div class="section-top-border">
+            <h3>@ViewBag.CheckoutComplete</h3>
+        </div>
+    </div>
+</div>

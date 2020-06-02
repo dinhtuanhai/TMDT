@@ -1,0 +1,39 @@
+﻿@using Microsoft.Extensions.Options
+@inject IOptions<MVCClient.Data.StripeSettings> Stripe
+@model Orders
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="banner-area relative about-banner" id="home">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="about-content col-lg-12">
+                <h1 class="text-white">
+                    Payment methods
+                </h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="whole-wrap">
+    <div class="container">
+        <div class="section-top-border">
+            <form asp-controller="Stripe" asp-action="Charge" asp-route-id="@Model.Id" asp-route-total="@Model.OrderTotal" method="POST">
+                <article>
+                    <label>@Model.OrderTotal</label>
+                </article>
+                <script src="//checkout.stripe.com/v2/checkout.js"
+                        class="stripe-button"
+                        data-key="@Stripe.Value.PublishableKey"
+                        data-locale="auto">
+                </script>
+            </form>
+
+        </div>
+    </div>
+</div>
+    
