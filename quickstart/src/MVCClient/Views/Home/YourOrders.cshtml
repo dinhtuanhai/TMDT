@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Orders>
+@{
+    ViewData["Title"] = "YourOrders";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="banner-area relative about-banner" id="home">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="about-content col-lg-12">
+                <h1 class="text-white">
+                    Your orders
+                </h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="whole-wrap">
+    <div class="container">
+        <div class="section-top-border">
+            <h3 class="mb-30">Orders</h3>
+            <div class="row mb-10">
+                <div class="col text-right">
+                    <form asp-action="YourOrders" method="GET" style="float:right">
+                        <div class="row">
+                            <input placeholder="Find order by date..." id="dateSearch" name="dateSearch" type="date" />
+                            <button class="genric-btn primary small" type="submit"><i class="fa fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+            <div class="row">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>OrderId</th>
+                            <th>Order Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Delivery status</th>
+                            <th>#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@((item.CreateDate.HasValue) ? item.CreateDate.Value.ToString("dd/MM/yyyy") : null)</td>
+                            <td>@item.OrderTotal</td>
+                            @if (item.IsPaid)
+                            {
+                                <td><button class="btn btn-success">Paid <i class="fa fa-check"></i></button></td>
+                            }
+                            else
+                            {
+                                <td><button class="btn btn-warning">COD <i class="fa fa-spinner"></i></button></td>
+                            }
+                            @if (item.Status == 1)
+                            {
+                                <td><button class="btn btn-success">Your order is on delivery <i class="fa fa-truck"></i></button></td>
+                            }
+                            else
+                            {
+                                <td><button class="btn btn-warning">Your order is processing <i class="fa fa-spinner"></i></button></td>
+                            }
+                            <td>
+                                <a class="btn btn-primary" asp-controller="Home" asp-action="YourOrderDetail" asp-route-id="@item.Id" title="Detail"><i class="fa fa-eye"></i></a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+﻿@model BakeryType
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="banner-area relative about-banner" id="home">
+    <div class="overlay overlay-bg"></div>
+    <div class="container">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="about-content col-lg-12">
+                <h1 class="text-white">
+                    Create Bakery
+                </h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="whole-wrap">
+    <div class="container">
+        <div class="section-top-border">
+            <form method="POST">
+                <div class="mt-10">
+                    <label>Bakery type</label>
+                    <input asp-for="Name" placeholder="Bakery name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Bakery name'" required class="single-input">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mt-10">
+                    <div class="row">
+                        <button type="submit" class="genric-btn info mr-10">Save</button>
+                        <a asp-controller="ManageBakeryType" asp-action="Index" class="genric-btn warning">Back</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

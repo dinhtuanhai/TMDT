@@ -17,7 +17,7 @@ namespace Data.Bo
         }
         public async Task<IEnumerable<BakeryType>> GetAllBakeryTypes()
         {
-            return await _context.BakeryType.ToListAsync();
+            return await _context.BakeryType.Where(x => x.Status == true).ToListAsync();
         }
 
         public async Task<IEnumerable<Bakery>> GetBakeries(string bakeryType = null, string searchString = null)

@@ -11,10 +11,13 @@ namespace MVCClient.Services
     {
         Task<IndexViewModel> GetCatalog(string bakeryType, string searchString);
         Task<Bakery> GetBakery(int id);
+        Task<BakeryType> GetType(int id);
         Task<IEnumerable<BakeryType>> GetTypes();
         Task<IEnumerable<Bakery>> GetListBakery(string type);
         Task CreateBakery(Bakery bakery);
         Task UpdateBakery(int id, Bakery bakery);
+        Task CreateType(BakeryType bakeryType);
+        Task UpdateType(int id, BakeryType bakeryType);
         Task DeleteBakery(int id);
     }
 }

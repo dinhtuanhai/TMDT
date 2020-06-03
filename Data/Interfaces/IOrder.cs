@@ -9,5 +9,6 @@ namespace Data.Interfaces
     public interface IOrder : IRepository<Orders>
     {
         void CreateOrder(Orders orders);
+        void Paid(Orders orders);
     }
 }

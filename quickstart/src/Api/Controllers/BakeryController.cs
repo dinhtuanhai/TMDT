@@ -69,6 +69,20 @@ namespace Api.Controllers
             return bakery;
         }
 
+        [HttpGet("type/{id}")]
+        [AllowAnonymous]
+        public async Task<ActionResult<BakeryType>> GetType(int id)
+        {
+            var type = await _context.BakeryType.FindAsync(id);
+
+            if (type == null)
+            {
+                return NotFound();
+            }
+
+            return type;
+        }
+
         [HttpPost]
         public async Task<ActionResult<Bakery>> Create(Bakery bakery)
         {
@@ -96,6 +110,43 @@ namespace Api.Controllers
             {
                 //await _repository.Update(bakery);
                 _context.Entry(await _context.Bakery.FirstOrDefaultAsync(x => x.Id == id)).CurrentValues.SetValues(bakery);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        [HttpPost("createtype")]
+        public async Task<ActionResult<Bakery>> CreateType(BakeryType bakeryType)
+        {
+            _context.BakeryType.Add(bakeryType);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPut("updatetype/{id}")]
+        public async Task<IActionResult> UpdateType(int id, BakeryType bakeryType)
+        {
+            if (id != bakeryType.Id)
+            {
+                return BadRequest();
+            }
+
+            var typemodify = await _context.BakeryType.FindAsync(id);
+
+            if (typemodify == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                //await _repository.Update(bakery);
+                _context.Entry(await _context.BakeryType.FirstOrDefaultAsync(x => x.Id == id)).CurrentValues.SetValues(bakeryType);
                 await _context.SaveChangesAsync();
             }
             catch

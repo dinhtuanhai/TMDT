@@ -72,12 +72,12 @@ namespace MVCClient.Controllers
         private Orders CreateOrderForCurrentUser()
         {
             Orders orders = new Orders();
-            orders.CreateDate = DateTime.Now;
             orders.FirstName = User.FindFirstValue("given_name");
             orders.LastName = User.FindFirstValue("family_name");
-            orders.Email = User.FindFirstValue("email");
+            orders.Email = User.FindFirstValue("email"); //userclaim đang thiếu phone
             orders.Address = User.FindFirstValue("address");
             orders.OrderTotal = _shoppingCart.GetShoppingCartTotal();
+            orders.IdBuyer = User.FindFirstValue("sub");
 
             return orders;
         }

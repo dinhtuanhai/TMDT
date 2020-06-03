@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Data.Interfaces;
 using Data.Models;
@@ -25,6 +26,10 @@ namespace MVCClient.Controllers
 
         public IActionResult PayWithCard(string stripeEmail, string stripeToken, Orders orders)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                orders.IdBuyer = User.FindFirstValue("sub");
+            }
             _orderRepository.CreateOrder(orders);
             _shoppingCart.ClearCard();
             var customers = new CustomerService();
@@ -46,13 +51,22 @@ namespace MVCClient.Controllers
             if(charge.Status == "succeeded")
             {
                 string BalanceTransactionId = charge.BalanceTransactionId;
+                _orderRepository.Paid(orders);
                 ViewBag.Message = "Thanks for your order";
             }
             return View();
         }
 
-        public IActionResult COD()
+        public IActionResult COD(Orders orders)
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                orders.IdBuyer = User.FindFirstValue("sub");
+            }
+
+            _orderRepository.CreateOrder(orders);
+            _shoppingCart.ClearCard();
+
             ViewBag.Message = "Thanks for your order";
             return View();
         }

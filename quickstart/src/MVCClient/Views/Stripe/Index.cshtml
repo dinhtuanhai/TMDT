@@ -22,27 +22,37 @@
 <div class="whole-wrap">
     <div class="container">
         <div class="section-top-border">
-            <form asp-controller="Stripe" asp-action="PayWithCard" method="POST">
-                <div class="row">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Total</th>
-                                <th>Shipping fee</th>
-                                <th>Sum total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>@Model.OrderTotal Đ</td>
-                                <td>25000 Đ</td>
-                                <td>@(Model.OrderTotal + 25000)  Đ</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3">
-                                    <a asp-controller="Stripe" asp-action="COD" class="btn btn-primary">Ship COD</a>
+            <div class="row">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Total</th>
+                            <th>Shipping fee</th>
+                            <th>Sum total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Model.OrderTotal Đ</td>
+                            <td>25000 Đ</td>
+                            <td>@(Model.OrderTotal + 25000)  Đ</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <form asp-controller="Stripe" asp-action="COD" method="POST">
+                                    <button type="submit" class="btn btn-primary">Ship COD</button>
+                                    <input hidden asp-for="CreateDate" />
+                                    <input hidden asp-for="FirstName" />
+                                    <input hidden asp-for="LastName" />
+                                    <input hidden asp-for="Email" />
+                                    <input hidden asp-for="Address" />
+                                    <input hidden asp-for="OrderTotal" />
+                                </form>
+                            </td>
+                            <td>
+                                <form asp-controller="Stripe" asp-action="PayWithCard" method="POST">
                                     <input hidden asp-for="CreateDate" />
                                     <input hidden asp-for="FirstName" />
                                     <input hidden asp-for="LastName" />
@@ -54,13 +64,12 @@
                                             data-key="@Stripe.Value.PublishableKey"
                                             data-locale="auto">
                                     </script>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </form>
-
+                                </form>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
         </div>
     </div>
 </div>

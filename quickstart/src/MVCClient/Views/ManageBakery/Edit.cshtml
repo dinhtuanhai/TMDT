@@ -22,6 +22,7 @@
         <div class="section-top-border">
             <form method="POST">
                 <input type="hidden" asp-for="@Model.bakeryModify.Id" />
+                <input type="hidden" asp-for="@Model.bakeryModify.Status" />
                 <div class="mt-10">
                     <label>Bakery name</label>
                     <input asp-for="@Model.bakeryModify.Name" placeholder="Bakery name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Bakery name'" required class="single-input">

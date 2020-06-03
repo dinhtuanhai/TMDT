@@ -20,7 +20,10 @@ namespace Data.Models
         public int? Idcustomer { get; set; }
         public DateTime? CreateDate { get; set; }
         public string Note { get; set; }
-        public int? Status { get; set; }
+        public string IdBuyer { get; set; }
+
+        public bool IsPaid { get; set; }
+        public int? Status { get; set; } //Tình trạng đơn hàng: chưa vận chuyển/đã vận chuyển
 
         public virtual Customer IdcustomerNavigation { get; set; }
         public virtual ICollection<OrderDetail> OrderDetail { get; set; }

@@ -58,11 +58,30 @@ namespace MVCClient.Services
             await _httpClient.PutAsync(uri, bakery);
         }
 
+        public async Task CreateType(BakeryType bakeryType)
+        {
+            var uri = _baseUrl + "/createtype";
+
+            await _httpClient.PostAsync(uri, bakeryType);
+        }
+        public async Task UpdateType(int id, BakeryType bakeryType)
+        {
+            var uri = _baseUrl + $"/updatetype/{id}";
+
+            await _httpClient.PutAsync(uri, bakeryType);
+        }
+
         public async Task DeleteBakery(int id)
         {
             var uri = _baseUrl + $"/{id}";
 
             await _httpClient.DeleteAsync(uri);
+        }
+
+        public async Task<BakeryType> GetType(int id)
+        {
+            var uri = _baseUrl + $"/type/{id}";
+            return await _httpClient.GetAsync<BakeryType>(uri);
         }
     }
 }

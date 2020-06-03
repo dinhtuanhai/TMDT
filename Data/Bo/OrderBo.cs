@@ -1,5 +1,6 @@
 ﻿using Data.Interfaces;
 using Data.Models;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,7 @@ namespace Data.Bo
         }
         public void CreateOrder(Orders orders)
         {
+            orders.CreateDate = DateTime.Now;
             _context.Orders.Add(orders);
             _context.SaveChanges();
             var shoppingCartItems = _shoppingCart.GetShoppingCartItem();
@@ -31,6 +33,12 @@ namespace Data.Bo
                 };
                 _context.OrderDetail.Add(orderDetail);
             }
+            _context.SaveChanges();
+        }
+
+        public void Paid(Orders orders)
+        {
+            orders.IsPaid = true;
             _context.SaveChanges();
         }
     }

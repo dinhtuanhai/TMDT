@@ -11,7 +11,7 @@ using MVCClient.Services;
 
 namespace MVCClient.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrators, Managers")]
     public class ManageBakeryController : Controller
     {
         private readonly IBakeryService _service;
