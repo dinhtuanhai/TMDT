@@ -1,9 +1,8 @@
-﻿@model Data.Models.Bakery
+﻿@model Bakery
 @{
     ViewData["Title"] = "Detail";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <section class="banner-area relative about-banner" id="home">
     <div class="overlay overlay-bg"></div>
     <div class="container">
@@ -21,20 +20,45 @@
         <div class="section-top-border">
             <div class="row">
                 <div class="preview col-md-6">
-                    <img class="img-fluid" src="~/img/c1.jpg" alt="">
+                    @*<img class="img-fluid" src="~/img/c1.jpg" alt="">*@
+                    @{
+                        var imgsrc = "";
+                        if (Model.Image != null)
+                        {
+                            var base64 = Convert.ToBase64String(Model.Image);
+                            imgsrc = string.Format("data:image/gif;base64,{0}", base64);
+                        }
+
+                    }
+                    <img src="@imgsrc" class="img-fluid" />
                 </div>
                 <div class="details col-md-6">
-                    <h3 class="product-title">@Model.Name</h3>
-                    <p class="product-description">@Model.Describe</p>
-                    <h4 class="price mb-10">Amount: <input type="number" class="w-25" /></h4>
-                    <hr />
-                    <h4 class="price">Price:   <b>@Model.Price Đ</b></h4>
-                    <div class="mt-30">
-                        <button class="genric-btn primary" type="button">Add to cart</button>
-                    </div>
+                    <form method="post" asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-id="@Model.Id">
+                        <h3 class="product-title">@Model.Name</h3>
+                        <p class="product-description">@Model.Describe</p>
+                        <h4>Rating </h4>
+                        @{
+                            if (!Int32.TryParse(Model.Rating.ToString(), out int a))
+                            {
+                                <p>There is no rating</p>
+                            }
+                            else
+                            {
+                                for (int i = 0; i < (int)Model.Rating; i++)
+                                {
+                                    <i class="fa fa-star text-warning"></i>
+                                }
+                            }
+                        }
+                        <h4 class="price mb-10 mt-10">Amount: <input id="amount" name="amount" type="number" class="w-25" /></h4>
+                        <hr />
+                        <h4 class="price">Price:   <b>@Model.Price Đ</b></h4>
+                        <div class="mt-30">
+                            <a class="genric-btn warning" asp-controller="ManageBakery" asp-action="Index" >BACK</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
