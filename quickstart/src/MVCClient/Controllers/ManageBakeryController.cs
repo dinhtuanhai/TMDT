@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVCClient.Authorization;
 using MVCClient.Models;
@@ -45,10 +47,12 @@ namespace MVCClient.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Bakery bakery)
+        public async Task<IActionResult> Create(Bakery bakery, IFormFile Image)
         {
             if (ModelState.IsValid)
             {
+                bakery.Status = 1;
+                await UpdateImage(bakery, Image);
 
                 var isAuthorize = await _authorizationService.AuthorizeAsync(User, bakery, ProductOperations.Create);
                 if (!isAuthorize.Succeeded)
@@ -66,18 +70,15 @@ namespace MVCClient.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var editviewmodel = new EditBakeryViewModel();
             var bakery = await _service.GetBakery(id);
-            var listbakerytype = await _service.GetTypes();
-            editviewmodel.bakeryModify = bakery;
-            editviewmodel.listBakeryType = listbakerytype;
+            ViewBag.listType = await _service.GetTypes();
 
-            return View(editviewmodel);
+            return View(bakery);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, EditBakeryViewModel editBakery)
+        public async Task<IActionResult> Edit(int id, Bakery editBakery, IFormFile Image)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +95,16 @@ namespace MVCClient.Controllers
                     return Forbid();
                 }
 
-                await _service.UpdateBakery(id, editBakery.bakeryModify);
+                if(Image != null)
+                {
+                    await UpdateImage(editBakery, Image);
+                }
+                else
+                {
+                    editBakery.Image = bakery.Image;
+                }
+
+                await _service.UpdateBakery(id, editBakery);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -114,6 +124,18 @@ namespace MVCClient.Controllers
             await _service.UpdateBakery(id, bakery);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task UpdateImage(Bakery bakery, IFormFile Image)
+        {
+            if (Image != null)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    await Image.CopyToAsync(stream);
+                    bakery.Image = stream.ToArray();
+                }
+            }
         }
     }
 }

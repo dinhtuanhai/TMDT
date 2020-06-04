@@ -94,4 +94,6 @@ insert into Bakery values (4,'Normal Chicken Sandwich',27000,5,'Sandwiches are o
 insert into Bakery values (4,'Egg Sandwich',27000,5,'Eggs are very rich in protein, but having just boiled egg in breakfast is quite boring. So, have egg sandwiches instead of that boring egg. The speciality of eggs sandwich is that it has deep fried egg along with lots of cheese which give it an amazing touch and taste as well. The sandwich has lots of veggies in it which makes them healthy also. The sandwich is yummy in taste.',1)
 insert into Bakery values (4,'Grilled Cheese Sandwich',27000,5,'We all love cheese by the depth of our heart. The speciality of grilled cheese sandwich is that it has grilled cheese instead of normal cheese which gives it an amazing touch and taste as well. The sandwich has lots of veggies in it which makes them healthy also.',1)
 
-
+INSERT INTO Bakery 
+SELECT 1,'Butter Cake',30000,4,'Different types of cake batter within the butter cake family include chocolate, white, yellow and marble; for white and yellow cakes coloring typically depends on whether they have whole eggs, or extra egg yolks in them (yellow cake) or egg whites only (white cake).',1, BulkColumn 
+FROM Openrowset( Bulk 'C:\Users\USER\Desktop\image\img1.jpg', Single_Blob) as image

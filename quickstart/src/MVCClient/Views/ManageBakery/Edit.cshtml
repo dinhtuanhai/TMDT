@@ -1,4 +1,4 @@
-﻿@model MVCClient.Models.EditBakeryViewModel
+﻿@model Bakery
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,30 +20,40 @@
 <div class="whole-wrap">
     <div class="container">
         <div class="section-top-border">
-            <form method="POST">
-                <input type="hidden" asp-for="@Model.bakeryModify.Id" />
-                <input type="hidden" asp-for="@Model.bakeryModify.Status" />
+            <form method="POST" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Status" />
                 <div class="mt-10">
                     <label>Bakery name</label>
-                    <input asp-for="@Model.bakeryModify.Name" placeholder="Bakery name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Bakery name'" required class="single-input">
-                    <span asp-validation-for="@Model.bakeryModify.Name" class="text-danger"></span>
+                    <input asp-for="Name" placeholder="Bakery name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Bakery name'" required class="single-input">
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="mt-10">
                     <label>Price</label>
-                    <input asp-for="@Model.bakeryModify.Price" placeholder="Price" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Price'" required class="single-input">
-                    <span asp-validation-for="@Model.bakeryModify.Price" class="text-danger"></span>
+                    <input asp-for="Price" placeholder="Price" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Price'" required class="single-input">
+                    <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
                 <div class="mt-10">
                     <label>Bakery Type</label>
                     <div class="form-select">
-                        <select class="list" asp-for="@Model.bakeryModify.Idtype" asp-items="@(new SelectList(Model.listBakeryType,"Id","Name"))">
+                        <select class="list" asp-for="Idtype" asp-items="@(new SelectList(ViewBag.listType,"Id","Name"))">
                         </select>
                     </div>
                 </div>
                 <div class="mt-10">
+                    <label>Rating</label>
+                    <input asp-for="Rating" placeholder="Rating" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Rating'" required class="single-input" />
+                    <span asp-validation-for="Rating" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
                     <label>Describe</label>
-                    <textarea asp-for="@Model.bakeryModify.Describe" class="single-textarea" placeholder="Describe" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Describe'" required=""></textarea>
-                    <span asp-validation-for="@Model.bakeryModify.Describe" class="text-danger"></span>
+                    <textarea asp-for="Describe" class="single-textarea" placeholder="Describe" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Describe'" required=""></textarea>
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+                <div class="mt-10">
+                    <label>Image</label>
+                    <input asp-for="Image" type="file" id="files" />
+                    <span asp-validation-for="Image" class="text-danger"></span>
                 </div>
                 <div class="mt-10">
                     <div class="row">

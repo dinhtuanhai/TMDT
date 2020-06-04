@@ -18,6 +18,7 @@ namespace Data.Models
         public double? Rating { get; set; }
         public string Describe { get; set; }
         public int? Status { get; set; }
+        public byte[] Image { get; set; }
 
         public virtual BakeryType IdtypeNavigation { get; set; }
         public virtual ICollection<OrderDetail> OrderDetail { get; set; }

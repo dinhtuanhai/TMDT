@@ -20,7 +20,7 @@
 <div class="whole-wrap">
     <div class="container">
         <div class="section-top-border">
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <div class="mt-10">
                     <label>Bakery name</label>
                     <input asp-for="Name" placeholder="Bakery name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Bakery name'" required class="single-input">
@@ -48,6 +48,12 @@
                     <textarea asp-for="Describe" class="single-textarea" placeholder="Describe" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Describe'" required=""></textarea>
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
+                <div class="mt-10">
+                    <label>Image</label>
+                    <input asp-for="Image" type="file" id="files"/>
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+                
                 <div class="mt-10">
                     <div class="row">
                         <button type="submit" class="genric-btn info mr-10">Save</button>
