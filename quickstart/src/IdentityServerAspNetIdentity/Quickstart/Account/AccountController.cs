@@ -13,9 +13,11 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace IdentityServer4.Quickstart.UI
@@ -200,6 +202,53 @@ namespace IdentityServer4.Quickstart.UI
             }
 
             return View("LoggedOut", vm);
+        }
+
+        [HttpGet]
+        public IActionResult Register(string returnUrl)
+        {
+            return View(new RegisterViewModel { returnUrl = returnUrl});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterViewModel vm)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
+            var checkusername = _userManager.FindByNameAsync(vm.UserName).Result;
+            if (checkusername == null)
+            {
+                ApplicationUser user = new ApplicationUser()
+                {
+                    UserName = vm.UserName
+                };
+                var result = await _userManager.CreateAsync(user, vm.Password);
+
+                if (result.Succeeded)
+                {
+                    string nameOfUser = vm.GivenName + " " + vm.FamilyName;
+                    result = _userManager.AddClaimsAsync(user, new Claim[]{
+                        new Claim(JwtClaimTypes.Name, nameOfUser),
+                        new Claim(JwtClaimTypes.GivenName, vm.GivenName),
+                        new Claim(JwtClaimTypes.FamilyName, vm.FamilyName),
+                        new Claim(JwtClaimTypes.Email, vm.Email),
+                        new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                        new Claim(JwtClaimTypes.PhoneNumber, vm.Phone),
+                        new Claim(JwtClaimTypes.Address, vm.Address)}).Result;
+
+                    result = _userManager.AddToRoleAsync(user, "Users").Result;
+
+                    await _signInManager.SignInAsync(user, false);
+                    return Redirect(vm.returnUrl);
+                }
+            }
+                
+
+            return View();
         }
 
         [HttpGet]

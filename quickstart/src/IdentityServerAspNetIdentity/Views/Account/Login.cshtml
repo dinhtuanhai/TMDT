@@ -48,8 +48,12 @@
                                     <button class="btn btn-primary" name="button" value="login">Login</button>
                                     <button class="btn btn-default" name="button" value="cancel">Cancel</button>
                                 </div>
+                                
                             </fieldset>
                         </form>
+                        <div>
+                            <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl">Become a member</a>
+                        </div>
                     </div>
                 </div>
             </div>

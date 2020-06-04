@@ -76,6 +76,7 @@ namespace MVCClient.Controllers
             orders.LastName = User.FindFirstValue("family_name");
             orders.Email = User.FindFirstValue("email"); //userclaim đang thiếu phone
             orders.Address = User.FindFirstValue("address");
+            orders.Phone = User.FindFirstValue("phone_number");
             orders.OrderTotal = _shoppingCart.GetShoppingCartTotal();
             orders.IdBuyer = User.FindFirstValue("sub");
 
