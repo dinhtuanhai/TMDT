@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -106,43 +107,48 @@ namespace IdentityServer4.Quickstart.UI
 
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
-                if (result.Succeeded)
+                var checkingUser = _userManager.FindByNameAsync(model.Username);
+                if((bool)checkingUser.Result.IsEnabled)
                 {
-                    var user = await _userManager.FindByNameAsync(model.Username);
-                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.ClientId));
-
-                    if (context != null)
+                    var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
+                    if (result.Succeeded)
                     {
-                        if (await _clientStore.IsPkceClientAsync(context.ClientId))
+                        var user = await _userManager.FindByNameAsync(model.Username);
+                        await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.ClientId));
+
+                        if (context != null)
                         {
-                            // if the client is PKCE then we assume it's native, so this change in how to
-                            // return the response is for better UX for the end user.
-                            return this.LoadingPage("Redirect", model.ReturnUrl);
+                            if (await _clientStore.IsPkceClientAsync(context.ClientId))
+                            {
+                                // if the client is PKCE then we assume it's native, so this change in how to
+                                // return the response is for better UX for the end user.
+                                return this.LoadingPage("Redirect", model.ReturnUrl);
+                            }
+
+                            // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+                            return Redirect(model.ReturnUrl);
                         }
 
-                        // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
-                        return Redirect(model.ReturnUrl);
+                        // request for a local page
+                        if (Url.IsLocalUrl(model.ReturnUrl))
+                        {
+                            return Redirect(model.ReturnUrl);
+                        }
+                        else if (string.IsNullOrEmpty(model.ReturnUrl))
+                        {
+                            return Redirect("~/");
+                        }
+                        else
+                        {
+                            // user might have clicked on a malicious link - should be logged
+                            throw new Exception("invalid return URL");
+                        }
                     }
 
-                    // request for a local page
-                    if (Url.IsLocalUrl(model.ReturnUrl))
-                    {
-                        return Redirect(model.ReturnUrl);
-                    }
-                    else if (string.IsNullOrEmpty(model.ReturnUrl))
-                    {
-                        return Redirect("~/");
-                    }
-                    else
-                    {
-                        // user might have clicked on a malicious link - should be logged
-                        throw new Exception("invalid return URL");
-                    }
+                    await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId: context?.ClientId));
+                    ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
                 }
-
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.ClientId));
-                ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
+                
             }
 
             // something went wrong, show form with error
@@ -204,6 +210,93 @@ namespace IdentityServer4.Quickstart.UI
             return View("LoggedOut", vm);
         }
 
+        [HttpGet("manageacount")]
+        [Authorize(Roles = "Administrators")]
+        public async Task<IActionResult> GetAllUser()
+        {
+            //List<ApplicationUser> listUser = _userManager.Users.ToList();
+            //var user = _userManager.FindByNameAsync("alice");
+            //user.Result.IsEnabled = true;
+            //await _userManager.AddToRoleAsync(user.Result, "Users");
+            //await _userManager.UpdateAsync(user.Result);
+
+            IEnumerable<ApplicationUser> listUserInRoleManager = await _userManager.GetUsersInRoleAsync("Managers");
+            IEnumerable<ApplicationUser> listUserInRoleUser = await _userManager.GetUsersInRoleAsync("Users");
+
+            ListUserViewModel listUser = new ListUserViewModel()
+            {
+                listUserInRoleManager = listUserInRoleManager,
+                listUserInRoleUser = listUserInRoleUser
+            };
+            return View(listUser);
+        }
+
+        public async Task<IActionResult> ChangeStatusAccount(string id)
+        {
+            //List<ApplicationUser> listUser = _userManager.Users.ToList();
+            var user = _userManager.FindByIdAsync(id);
+            if((bool)user.Result.IsEnabled)
+            {
+                user.Result.IsEnabled = false;
+            }
+            else
+            {
+                user.Result.IsEnabled = true;
+            }
+            
+            await _userManager.UpdateAsync(user.Result);
+
+            return RedirectToAction("GetAllUser");
+        }
+
+        [HttpGet]
+        public IActionResult CreateManagerAccount()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateManagerAccount(RegisterViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
+            var checkusername = _userManager.FindByNameAsync(vm.UserName).Result;
+            if (checkusername == null)
+            {
+                ApplicationUser user = new ApplicationUser()
+                {
+                    UserName = vm.UserName,
+                    Email = vm.Email,
+                    PhoneNumber = vm.Phone,
+                    IsEnabled = true
+                };
+                var result = await _userManager.CreateAsync(user, vm.Password);
+
+                if (result.Succeeded)
+                {
+                    string nameOfUser = vm.GivenName + " " + vm.FamilyName;
+                    result = _userManager.AddClaimsAsync(user, new Claim[]{
+                        new Claim(JwtClaimTypes.Name, nameOfUser),
+                        new Claim(JwtClaimTypes.GivenName, vm.GivenName),
+                        new Claim(JwtClaimTypes.FamilyName, vm.FamilyName),
+                        new Claim(JwtClaimTypes.Email, vm.Email),
+                        new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                        new Claim(JwtClaimTypes.PhoneNumber, vm.Phone),
+                        new Claim(JwtClaimTypes.Address, vm.Address)}).Result;
+
+                    result = _userManager.AddToRoleAsync(user, "Managers").Result;
+
+                    return RedirectToAction("GetAllUser");
+                }
+            }
+
+            return RedirectToAction("GetAllUser");
+        }
+
         [HttpGet]
         public IActionResult Register(string returnUrl)
         {
@@ -224,7 +317,10 @@ namespace IdentityServer4.Quickstart.UI
             {
                 ApplicationUser user = new ApplicationUser()
                 {
-                    UserName = vm.UserName
+                    UserName = vm.UserName,
+                    Email = vm.Email,
+                    PhoneNumber = vm.Phone,
+                    IsEnabled = true
                 };
                 var result = await _userManager.CreateAsync(user, vm.Password);
 

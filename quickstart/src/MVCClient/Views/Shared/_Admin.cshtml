@@ -5,6 +5,10 @@
         <li><a asp-action="Index" asp-controller="ManageBakery">Bakeries</a></li>
         <li><a asp-action="Index" asp-controller="ManageBakeryType">Bakery types</a></li>
         <li><a asp-action="Index" asp-controller="ManageOrder">Orders</a></li>
+        @if (User.IsInRole("Administrators"))
+        {
+            <li><a href="http://localhost:5000/manageacount">Accounts</a></li>
+        }
     </ul>
 }
 
