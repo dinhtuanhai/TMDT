@@ -17,6 +17,7 @@ namespace Data.Models
         public long? Price { get; set; }
         public double? Rating { get; set; }
         public string Describe { get; set; }
+        public int? Quantity { get; set; }
         public int? Status { get; set; }
         public byte[] Image { get; set; }
 

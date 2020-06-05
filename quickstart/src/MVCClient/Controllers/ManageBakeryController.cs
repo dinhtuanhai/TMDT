@@ -30,7 +30,6 @@ namespace MVCClient.Controllers
             {
                 AllBakeryTypes = menu.AllBakeryTypes,
                 Bakeries = menu.Bakeries
-
             };
             return View(indexViewModel);
         }

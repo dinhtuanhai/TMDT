@@ -59,7 +59,6 @@ namespace Data.Models
             }
             _context.SaveChanges();
         }
-
         public int RemoveFromCart(Bakery bakery)
         {
             ShoppingCartItem shoppingCartItem = _context.ShoppingCartItem.SingleOrDefault(s => s.Idbakery == bakery.Id && s.IdShoppingCart.Equals(Id));

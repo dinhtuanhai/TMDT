@@ -54,6 +54,10 @@ namespace MVCClient.Controllers
             {
                 Orders orders = await _orderrepository.GetBy(id);
                 orders.Status = 1;
+
+                //Trừ số lượng bánh khi giao hàng
+                _orderrepository.UpdateBakeryQuantity(orders);
+                
                 _context.Orders.Update(orders);
                 _context.SaveChanges();
 

@@ -10,5 +10,6 @@ namespace Data.Interfaces
     {
         void CreateOrder(Orders orders);
         void Paid(Orders orders);
+        void UpdateBakeryQuantity(Orders orders);
     }
 }

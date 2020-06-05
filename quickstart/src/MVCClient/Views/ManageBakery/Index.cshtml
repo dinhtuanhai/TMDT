@@ -46,6 +46,7 @@
                             <th>Image</th>
                             <th>Describe</th>
                             <th>Type</th>
+                            <th>Quantity</th>
                             <th>Price</th>
                             <th>#</th>
                         </tr>
@@ -69,6 +70,7 @@
                                 </td>
                                 <td class="text-truncate" style="max-width: 350px">@item.Describe</td>
                                 <td>@item.IdtypeNavigation.Name</td>
+                                <td>@item.Quantity</td>
                                 <td>@item.Price</td>
                                 <td>
                                     <a class="btn btn-primary small" asp-controller="ManageBakery" asp-action="Detail" asp-route-id="@item.Id" title="Preview detail"><i class="fa fa-eye"></i></a>

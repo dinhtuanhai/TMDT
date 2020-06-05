@@ -31,7 +31,7 @@ namespace MVCClient.Controllers
                 orders.IdBuyer = User.FindFirstValue("sub");
             }
             _orderRepository.CreateOrder(orders);
-            _shoppingCart.ClearCard();
+            
             var customers = new CustomerService();
             var charges = new ChargeService();
 
@@ -52,6 +52,7 @@ namespace MVCClient.Controllers
             {
                 string BalanceTransactionId = charge.BalanceTransactionId;
                 _orderRepository.Paid(orders);
+                _shoppingCart.ClearCard();
                 ViewBag.Message = "Thanks for your order";
             }
             return View();
