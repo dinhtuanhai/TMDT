@@ -6,6 +6,7 @@
 
 <div>
     <a asp-controller="Account" asp-action="CreateManagerAccount" class="btn btn-success">Create account manager</a>
+    <a href="http://localhost:5002" class="btn btn-warning">Back</a>
 </div>
 <h3>Managers</h3>
 <table class="table table-hover">
@@ -26,11 +27,11 @@
                 <td>@item.PhoneNumber</td>
                 @if ((bool)item.IsEnabled)
                 {
-                    <td><a asp-controller="Account" asp-action="ChangeStatusAccount" asp-route-id="@item.Id" class="btn btn-success">Active</a></td>
+                    <td><a asp-controller="Account" asp-action="ChangeStatusAccount" asp-route-idaccount="@item.Id" asp-route-idadmin="@ViewBag.idAdmin" class="btn btn-success">Active</a></td>
                 }
                 else
                 {
-                    <td><a asp-controller="Account" asp-action="ChangeStatusAccount" asp-route-id="@item.Id" class="btn btn-danger">Inactive</a></td>
+                    <td><a asp-controller="Account" asp-action="ChangeStatusAccount" asp-route-idaccount="@item.Id" asp-route-idadmin="@ViewBag.idAdmin" class="btn btn-danger">Inactive</a></td>
                 }
             </tr>
         }
@@ -56,14 +57,15 @@
                 <td>@item.PhoneNumber</td>
                 @if ((bool)item.IsEnabled)
                 {
-                    <td><a asp-controller="Account" asp-action="ChangeStatusAccount" asp-route-id="@item.Id" class="btn btn-success">Active</a></td>
+                    <td><a asp-controller="Account" asp-action="ChangeStatusAccount" asp-route-idaccount="@item.Id" asp-route-idadmin="@ViewBag.idAdmin" class="btn btn-success">Active</a></td>
                 }
                 else
                 {
-                    <td><a asp-controller="Account" asp-action="ChangeStatusAccount" asp-route-id="@item.Id" class="btn btn-danger">Inactive</a></td>
+                    <td><a asp-controller="Account" asp-action="ChangeStatusAccount" asp-route-idaccount="@item.Id" asp-route-idadmin="@ViewBag.idAdmin" class="btn btn-danger">Inactive</a></td>
                 }
             </tr>
         }
     </tbody>
 </table>
+
 

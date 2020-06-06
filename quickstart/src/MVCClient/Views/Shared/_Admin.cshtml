@@ -7,7 +7,7 @@
         <li><a asp-action="Index" asp-controller="ManageOrder">Orders</a></li>
         @if (User.IsInRole("Administrators"))
         {
-            <li><a href="http://localhost:5000/manageacount">Accounts</a></li>
+            <li><a href='@string.Format("http://localhost:5000/manageacount?id={0}", User.FindFirstValue("sub"))'>Accounts</a></li>
         }
     </ul>
 }

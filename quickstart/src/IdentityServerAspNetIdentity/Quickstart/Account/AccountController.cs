@@ -10,6 +10,7 @@ using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using IdentityServerAspNetIdentity.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -211,30 +212,40 @@ namespace IdentityServer4.Quickstart.UI
         }
 
         [HttpGet("manageacount")]
-        [Authorize(Roles = "Administrators")]
-        public async Task<IActionResult> GetAllUser()
+        public async Task<IActionResult> GetAllUser(string id)
         {
+            var user = _userManager.FindByIdAsync(id);
+            bool Isadmin = false;
+            if (user.Result != null)
+            {
+                Isadmin = await _userManager.IsInRoleAsync(user.Result, "Administrators");
+            }
+            if(Isadmin)
+            {
+                IEnumerable<ApplicationUser> listUserInRoleManager = await _userManager.GetUsersInRoleAsync("Managers");
+                IEnumerable<ApplicationUser> listUserInRoleUser = await _userManager.GetUsersInRoleAsync("Users");
+
+                ListUserViewModel listUser = new ListUserViewModel()
+                {
+                    listUserInRoleManager = listUserInRoleManager,
+                    listUserInRoleUser = listUserInRoleUser
+                };
+                ViewBag.idAdmin = id;
+                return View(listUser);
+            }
             //List<ApplicationUser> listUser = _userManager.Users.ToList();
             //var user = _userManager.FindByNameAsync("alice");
             //user.Result.IsEnabled = true;
             //await _userManager.AddToRoleAsync(user.Result, "Users");
             //await _userManager.UpdateAsync(user.Result);
 
-            IEnumerable<ApplicationUser> listUserInRoleManager = await _userManager.GetUsersInRoleAsync("Managers");
-            IEnumerable<ApplicationUser> listUserInRoleUser = await _userManager.GetUsersInRoleAsync("Users");
-
-            ListUserViewModel listUser = new ListUserViewModel()
-            {
-                listUserInRoleManager = listUserInRoleManager,
-                listUserInRoleUser = listUserInRoleUser
-            };
-            return View(listUser);
+            return Redirect("http://localhost:5002");
         }
 
-        public async Task<IActionResult> ChangeStatusAccount(string id)
+        public async Task<IActionResult> ChangeStatusAccount(string idaccount, string idadmin)
         {
             //List<ApplicationUser> listUser = _userManager.Users.ToList();
-            var user = _userManager.FindByIdAsync(id);
+            var user = _userManager.FindByIdAsync(idaccount);
             if((bool)user.Result.IsEnabled)
             {
                 user.Result.IsEnabled = false;
@@ -246,7 +257,7 @@ namespace IdentityServer4.Quickstart.UI
             
             await _userManager.UpdateAsync(user.Result);
 
-            return RedirectToAction("GetAllUser");
+            return RedirectToAction("GetAllUser", new { id = idadmin });
         }
 
         [HttpGet]
