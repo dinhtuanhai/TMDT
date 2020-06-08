@@ -32,15 +32,27 @@ namespace MVCClient.Controllers
             return View(scVM);
         }
 
-        public async Task<RedirectToActionResult> AddToShoppingCart(int id, int amount)
+        public async Task<JsonResult> AddToShoppingCart(int id, int amount)
         {
-            Bakery selectedBakery = await _service.GetBakery(id);
-            if(selectedBakery != null)
+            try
             {
-                _shoppingcart.AddToCart(selectedBakery, amount);
+                Bakery selectedBakery = await _service.GetBakery(id);
+                if (selectedBakery != null)
+                {
+                    _shoppingcart.AddToCart(selectedBakery, amount);
+                }
+                return Json(new
+                {
+                    status = true
+                });
             }
-
-            return RedirectToAction("Index");
+            catch
+            {
+                return Json(new
+                {
+                    status = false
+                });
+            }
         }
 
         public async Task<RedirectToActionResult> RemoveFromShoppingCart(int id)

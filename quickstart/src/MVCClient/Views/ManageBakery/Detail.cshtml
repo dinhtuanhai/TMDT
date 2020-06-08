@@ -52,7 +52,18 @@
                         }
                         <h4 class="price mb-10 mt-10">Amount: <input id="amount" name="amount" type="number" class="w-25" /></h4>
                         <hr />
-                        <h4 class="price">Price:   <b>@Model.Price Đ</b></h4>
+                        <h4 class="price">
+                            Price:  
+                            @if (Model.Discount > 0)
+                            {
+                                <s>@Model.Price Đ</s>  <i class="fa fa-arrow-right"></i>  <b>@(Model.Price - (Model.Price * Model.Discount / 100) ) Đ</b>
+                            }
+                            else
+                            {
+                                <b>@Model.Price Đ</b>
+                            }
+
+                        </h4>
                         <div class="mt-30">
                             <a class="genric-btn warning" asp-controller="ManageBakery" asp-action="Index" >BACK</a>
                         </div>

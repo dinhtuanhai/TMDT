@@ -23,6 +23,7 @@
 <!-- End banner Area -->
 <!-- Start menu-list Area -->
 <section class="menu-list-area section-gap">
+    @*<button id="0" data-toggle="modal" data-target="#modal-default" class="btn btn-danger btn-sm delete" title="Delete"><i class="fa fa-trash"></i></button>*@
     <div class="container">
         <div class="row">
             <div class="menu-cat mx-auto">
@@ -60,7 +61,6 @@
                 {
                     <div class="single-menu-list row justify-content-between align-items-center">
                         <div class="col-lg-2" align="center">
-                            @*<img class="img-fluid" src="~/img/c1.jpg" alt="">*@
                             @{
                                 var imgsrc = "";
                                 if (item.Image != null)
@@ -80,16 +80,23 @@
                         </div>
                         <div class="col-lg-2 flex-row d-flex price-size">
                             <div class="s-price col">
-                                <span>@item.Price Đ</span>
+                                @*<span>@item.Price Đ</span>*@
+                                <span>
+                                    @if (item.Discount > 0)
+                                    {
+                                        <s class="text-black">@item.Price Đ</s> <b>@(item.Price - (item.Price * item.Discount / 100) ) Đ</b>
+                                    }
+                                    else
+                                    {
+                                        <b>@item.Price Đ</b>
+                                    }
+
+                                </span>
                             </div>
                         </div>
                         <div class="col-lg-4" align="center">
-                            <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-id="@item.Id" asp-route-amount="1" class="genric-btn info">Add</a>
+                            <button data-toggle="modal" data-target="#modal-default" data-id="@item.Id" data-amount="1" class="genric-btn info btnAdd">Add</button>
                             <a asp-controller="Menu" asp-action="Detail" asp-route-id="@item.Id" class="genric-btn warning">Detail</a>
-                            @if ((await AuthorizationService.AuthorizeAsync(User, item, ProductOperations.Update)).Succeeded)
-                            {
-                                <a asp-controller="Menu" asp-action="Edit" asp-route-id="@item.Id" class="genric-btn info">Edit</a>
-                            }
                         </div>
                     </div>
                 }
@@ -124,16 +131,22 @@
                                 </div>
                                 <div class="col-lg-2 flex-row d-flex price-size">
                                     <div class="s-price col">
-                                        <span>@item.Price Đ</span>
+                                        <span>
+                                            @if (item.Discount > 0)
+                                            {
+                                                <s class="text-black">@item.Price Đ</s> <b>@(item.Price - (item.Price * item.Discount / 100) ) Đ</b>
+                                            }
+                                            else
+                                            {
+                                                <b>@item.Price Đ</b>
+                                            }
+
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-lg-4" align="center">
-                                    <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-id="@item.Id" asp-route-amount="1" class="genric-btn primary">Add</a>
-                                    <a asp-controller="Menu" asp-action="Detail" asp-route-id="@item.Id" class="genric-btn primary">Detail</a>
-                                    @if ((await AuthorizationService.AuthorizeAsync(User, item, ProductOperations.Update)).Succeeded)
-                                    {
-                                        <a asp-controller="Menu" asp-action="Edit" asp-route-id="@item.Id" class="genric-btn info">Edit</a>
-                                    }
+                                    <button data-toggle="modal" data-target="#modal-default" data-id="@item.Id" data-amount="1" class="genric-btn info btnAdd">Add</button>
+                                    <a asp-controller="Menu" asp-action="Detail" asp-route-id="@item.Id" class="genric-btn warning">Detail</a>
                                 </div>
                             </div>
                         }
@@ -170,3 +183,54 @@
     </div>
 </section>
 <!-- End about-video Area -->
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content bg-success">
+            <div class="modal-header">
+                <h4 class="modal-title text-white"><i class="fa fa-check"></i>  Add bakery success</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/vendor/jquery-2.2.4.min.js"></script>
+<script>
+    $(document).ready(function ()
+    {
+        $('#modal-default').on('show.bs.modal', function ()
+        {
+            var myModal = $(this);
+            clearTimeout(myModal.data('hideInterval'));
+            myModal.data('hideInterval', setTimeout(function ()
+            {
+                myModal.modal('hide');
+            }, 1200));
+        });
+
+        $(document).on("click", ".btnAdd", function ()
+        {
+            var id = $(this).data("id");
+            var amount = $(this).data("amount");
+            $.ajax({
+                url: "/ShoppingCart/AddToShoppingCart",
+                type: "post",
+                data: {
+                    id: id,
+                    amount: amount
+                },
+                dataType: "json",
+                success: function (response)
+                {
+                    if (response.status)
+                    {
+                        $('#modal-default').addClass("show");
+                    }
+                }
+            })
+        })
+    });
+</script>

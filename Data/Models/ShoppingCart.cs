@@ -95,7 +95,7 @@ namespace Data.Models
 
         public decimal GetShoppingCartTotal()
         {
-            var total = _context.ShoppingCartItem.Where(c => c.IdShoppingCart == Id).Select(c => c.IdbakeryNavigation.Price * c.Amount).Sum();
+            var total = _context.ShoppingCartItem.Where(c => c.IdShoppingCart == Id).Select(c => (c.IdbakeryNavigation.Price - (c.IdbakeryNavigation.Price * c.IdbakeryNavigation.Discount / 100))  * c.Amount).Sum();
             return (decimal)total;
         }
     }

@@ -48,6 +48,7 @@
                             <th>Type</th>
                             <th>Quantity</th>
                             <th>Price</th>
+                            <th>Discount</th>
                             <th>#</th>
                         </tr>
                     </thead>
@@ -68,14 +69,15 @@
                                     }
                                     <img src="@imgsrc" style="max-width:200px; max-height:100px"/>
                                 </td>
-                                <td class="text-truncate" style="max-width: 350px">@item.Describe</td>
+                                <td class="text-truncate" style="max-width: 290px">@item.Describe</td>
                                 <td>@item.IdtypeNavigation.Name</td>
                                 <td>@item.Quantity</td>
                                 <td>@item.Price</td>
+                                <td>@item.Discount %</td>
                                 <td>
-                                    <a class="btn btn-primary small" asp-controller="ManageBakery" asp-action="Detail" asp-route-id="@item.Id" title="Preview detail"><i class="fa fa-eye"></i></a>
-                                    <a class="btn btn-warning small" asp-controller="ManageBakery" asp-action="Edit" asp-route-id="@item.Id" title="Edit"><i class="fa fa-pencil"></i></a>
-                                    <button id="@item.Id" data-toggle="modal" data-target="#modal-default" class="btn btn-danger small delete" title="Delete"><i class="fa fa-trash"></i></button>
+                                    <a class="btn btn-primary btn-sm" asp-controller="ManageBakery" asp-action="Detail" asp-route-id="@item.Id" title="Preview detail"><i class="fa fa-eye"></i></a>
+                                    <a class="btn btn-warning btn-sm" asp-controller="ManageBakery" asp-action="Edit" asp-route-id="@item.Id" title="Edit"><i class="fa fa-pencil"></i></a>
+                                    <button id="@item.Id" data-toggle="modal" data-target="#modal-default" class="btn btn-danger btn-sm delete" title="Delete"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
                         }

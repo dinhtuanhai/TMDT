@@ -51,6 +51,7 @@ namespace MVCClient.Controllers
             if (ModelState.IsValid)
             {
                 bakery.Status = 1;
+                bakery.CreateDate = DateTime.Now;
                 await UpdateImage(bakery, Image);
 
                 var isAuthorize = await _authorizationService.AuthorizeAsync(User, bakery, ProductOperations.Create);

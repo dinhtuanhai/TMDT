@@ -20,6 +20,8 @@ namespace Data.Models
         public int? Quantity { get; set; }
         public int? Status { get; set; }
         public byte[] Image { get; set; }
+        public int Discount { get; set; }
+        public DateTime CreateDate { get; set; }
 
         public virtual BakeryType IdtypeNavigation { get; set; }
         public virtual ICollection<OrderDetail> OrderDetail { get; set; }

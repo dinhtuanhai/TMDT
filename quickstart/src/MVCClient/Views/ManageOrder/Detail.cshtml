@@ -33,12 +33,20 @@
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
-                                <td>@item.IdbakeryNavigation.Name</td>
-                                <td>@item.Quantity</td>
-                                <td>@item.IdbakeryNavigation.Price</td>
-                                <td>@((item.Quantity * item.IdbakeryNavigation.Price).ToString())</td>
-                            </tr>
+                        <tr>
+                            <td>@item.IdbakeryNavigation.Name</td>
+                            <td>@item.Quantity</td>
+                            @if (item.IdbakeryNavigation.Discount > 0)
+                            {
+                                <td>@(item.IdbakeryNavigation.Price - (item.IdbakeryNavigation.Price * item.IdbakeryNavigation.Discount / 100)) Đ</td>
+                            }
+                            else
+                            {
+                                <td>@item.IdbakeryNavigation.Price Đ</td>
+                            }
+
+                            <td>@((item.Quantity * (item.IdbakeryNavigation.Price - (item.IdbakeryNavigation.Price * item.IdbakeryNavigation.Discount / 100))).ToString()) Đ</td>
+                        </tr>
                         }
                     </tbody>
                 </table>
