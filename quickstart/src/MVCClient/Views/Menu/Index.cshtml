@@ -186,12 +186,9 @@
 
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
-        <div class="modal-content bg-success">
+        <div class="modal-content bg-warning">
             <div class="modal-header">
-                <h4 class="modal-title text-white"><i class="fa fa-check"></i>  Add bakery success</h4>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h4 class="modal-title text-dark"><i class="fa fa-spinner"></i>  Adding bakery...</h4>
             </div>
         </div>
     </div>
@@ -201,15 +198,15 @@
 <script>
     $(document).ready(function ()
     {
-        $('#modal-default').on('show.bs.modal', function ()
-        {
-            var myModal = $(this);
-            clearTimeout(myModal.data('hideInterval'));
-            myModal.data('hideInterval', setTimeout(function ()
-            {
-                myModal.modal('hide');
-            }, 1200));
-        });
+        //$('#modal-default').on('show.bs.modal', function ()
+        //{
+        //    var myModal = $(this);
+        //    clearTimeout(myModal.data('hideInterval'));
+        //    myModal.data('hideInterval', setTimeout(function ()
+        //    {
+        //        myModal.modal('hide');
+        //    }, 1200));
+        //});
 
         $(document).on("click", ".btnAdd", function ()
         {
@@ -227,7 +224,7 @@
                 {
                     if (response.status)
                     {
-                        $('#modal-default').addClass("show");
+                        $('#modal-default').modal('hide');
                     }
                 }
             })
