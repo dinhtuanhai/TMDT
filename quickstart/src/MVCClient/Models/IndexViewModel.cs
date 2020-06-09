@@ -12,5 +12,7 @@ namespace MVCClient.Models
         public string TypeSearch { get; set; }
         public IEnumerable<BakeryType> AllBakeryTypes { get; set; }
         public IList<Bakery> Bakeries { get; set; }
+        public IList<Bakery> BakeriesSale { get; set; }
+        public IList<Bakery> BakeriesNew { get; set; }
     }
 }

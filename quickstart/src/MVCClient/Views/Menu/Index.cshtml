@@ -33,6 +33,16 @@
                             All
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="sale-tab" data-toggle="pill" href="#sale" role="tab" aria-controls="sale" aria-selected="true">
+                            Sale
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="newbakery-tab" data-toggle="pill" href="#newbakery" role="tab" aria-controls="newbakery" aria-selected="true">
+                            New bakery
+                        </a>
+                    </li>
                     @foreach (var type in Model.AllBakeryTypes)
                     {
                         <li class="nav-item">
@@ -56,6 +66,7 @@
             </div>
         </div>
         <div id="pills-tabContent" class="tab-content absolute">
+            @*ALL TAB*@
             <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
                 @foreach (var item in Model.Bakeries)
                 {
@@ -101,6 +112,102 @@
                     </div>
                 }
             </div>
+
+            @*SALE TAB*@
+            <div class="tab-pane fade" id="sale" role="tabpanel" aria-labelledby="sale-tab">
+                @foreach (var item in Model.BakeriesSale)
+                {
+                    <div class="single-menu-list row justify-content-between align-items-center">
+                        <div class="col-lg-2" align="center">
+                            @{
+                                var imgsrc = "";
+                                if (item.Image != null)
+                                {
+                                    var base64 = Convert.ToBase64String(item.Image);
+                                    imgsrc = string.Format("data:image/gif;base64,{0}", base64);
+                                }
+
+                            }
+                            <img src="@imgsrc" class="img-fluid" />
+                        </div>
+                        <div class="col-lg-4">
+                            <a href="#" align="center"><h4>@item.Name</h4></a>
+                            <p class="text-truncate" style="max-width: 700px">
+                                @item.Describe
+                            </p>
+                        </div>
+                        <div class="col-lg-2 flex-row d-flex price-size">
+                            <div class="s-price col">
+                                @*<span>@item.Price Đ</span>*@
+                                <span>
+                                    @if (item.Discount > 0)
+                                    {
+                                        <s class="text-black">@item.Price Đ</s> <b>@(item.Price - (item.Price * item.Discount / 100) ) Đ</b>
+                                    }
+                                    else
+                                    {
+                                        <b>@item.Price Đ</b>
+                                    }
+
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" align="center">
+                            <button data-toggle="modal" data-target="#modal-default" data-id="@item.Id" data-amount="1" class="genric-btn info btnAdd">Add</button>
+                            <a asp-controller="Menu" asp-action="Detail" asp-route-id="@item.Id" class="genric-btn warning">Detail</a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+
+            @*NEW BAKERY TAB*@
+            <div class="tab-pane fade" id="newbakery" role="tabpanel" aria-labelledby="newbakery-tab">
+                @foreach (var item in Model.BakeriesNew)
+                {
+                    <div class="single-menu-list row justify-content-between align-items-center">
+                        <div class="col-lg-2" align="center">
+                            @{
+                                var imgsrc = "";
+                                if (item.Image != null)
+                                {
+                                    var base64 = Convert.ToBase64String(item.Image);
+                                    imgsrc = string.Format("data:image/gif;base64,{0}", base64);
+                                }
+
+                            }
+                            <img src="@imgsrc" class="img-fluid" />
+                        </div>
+                        <div class="col-lg-4">
+                            <a href="#" align="center"><h4>@item.Name</h4></a>
+                            <p class="text-truncate" style="max-width: 700px">
+                                @item.Describe
+                            </p>
+                        </div>
+                        <div class="col-lg-2 flex-row d-flex price-size">
+                            <div class="s-price col">
+                                @*<span>@item.Price Đ</span>*@
+                                <span>
+                                    @if (item.Discount > 0)
+                                    {
+                                        <s class="text-black">@item.Price Đ</s> <b>@(item.Price - (item.Price * item.Discount / 100) ) Đ</b>
+                                    }
+                                    else
+                                    {
+                                        <b>@item.Price Đ</b>
+                                    }
+
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-4" align="center">
+                            <button data-toggle="modal" data-target="#modal-default" data-id="@item.Id" data-amount="1" class="genric-btn info btnAdd">Add</button>
+                            <a asp-controller="Menu" asp-action="Detail" asp-route-id="@item.Id" class="genric-btn warning">Detail</a>
+                        </div>
+                    </div>
+                }
+            </div>
+
 
             @foreach (var type in Model.AllBakeryTypes)
             {

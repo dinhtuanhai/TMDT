@@ -25,11 +25,13 @@ namespace MVCClient.Controllers
         public async Task<IActionResult> Index(string bakeryType, string searchString)
         {
             var menu = await _service.GetCatalog(bakeryType, searchString);
+
             var indexViewModel = new IndexViewModel()
             {
                 AllBakeryTypes = menu.AllBakeryTypes,
-                Bakeries = menu.Bakeries
-
+                Bakeries = menu.Bakeries,
+                BakeriesSale = menu.Bakeries.Where(x => x.Discount > 0).ToList(),
+                BakeriesNew = menu.Bakeries.Where(x => (DateTime.Now - x.CreateDate).Days < 30).ToList()
             };
             return View(indexViewModel);
         }
